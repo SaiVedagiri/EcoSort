@@ -22,8 +22,8 @@ const server = http.createServer(function (req, res) {
 AWS.config.update({
   region: process.env.AWSDYNAMOREGION,
   endpoint: process.env.AWSDYNAMOENDPOINT,
-  accessKeyId: process.env.AWSDYNAMOACCESSKEYID,
-  secretAccessKey: process.env.AWSDYNAMOSECRETACCESSKEY,
+  accessKeyId: process.env.AWSACCESSKEYID,
+  secretAccessKey: process.env.AWSSECRETACCESSKEY,
 });
 
 const wss = new WebSocket.Server({ server });
@@ -176,7 +176,8 @@ express()
       userPassword = myVal.password;
       if (bcrypt.compareSync(inputPassword, userPassword)) {
         returnVal = {
-          data: myVal.userID,
+          data: "Valid",
+          id: myVal.userID,
           imageurl: "assets/default.png",
         };
       } else {
@@ -252,7 +253,8 @@ express()
         myVal2 = await searchUserEmail(email);
       }
       returnVal = {
-        data: myVal2.userID,
+        data: "Valid",
+        id: myVal2.userID,
         imageurl: "assets/default.png",
       };
     }

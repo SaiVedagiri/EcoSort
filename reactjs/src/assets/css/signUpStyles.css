@@ -1,0 +1,129 @@
+body {
+    padding: 0px;
+    margin: 0;
+    background-image: white;
+    font-family: 'Karla', sans-serif;
+}
+
+.page {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    height: 90vh;
+    background-image: white;
+    font-family: 'Karla', sans-serif;
+}
+
+.box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: rgb(15, 200, 255);;
+    border-radius: 22px;
+    width: 30vw;
+    font-family: 'Karla', sans-serif;
+    /* font-family: 'Quicksand', sans-serif; */
+}
+
+#nav {
+    background-color: black;
+    width: 100vw;
+    height: 10vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: 'Karla', sans-serif;
+}
+
+#emailInput,
+#passwordInput,
+#firstName,
+#lastName,
+#passwordConfirm {
+    height: 20px;
+    width: 250px;
+    border: solid white;
+    border-radius: 22px;
+    font-family: 'Rubik', sans-serif;
+}
+
+.break {
+    height: 15px;
+}
+
+.box {
+    padding: 5px;
+    font-family: 'Karla', sans-serif;
+}
+
+#customBtn {
+    display: inline-block;
+    background: white;
+    color: #444;
+    width: 190px;
+    border-radius: 5px;
+    border: thin solid #888;
+    box-shadow: 1px 1px 1px grey;
+    white-space: nowrap;
+    font-family: 'Karla', sans-serif;
+}
+
+#customBtn:hover {
+    cursor: pointer;
+}
+
+.signUp {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* background-image: linear-gradient( 200deg, rgb(253, 153, 212), rgb(255, 176, 176, 0.555)); */
+    border-radius: 22px;
+    width: 30vw;
+    font-family: 'Rubik', sans-serif;
+}
+
+.title {
+    margin: 0px;
+    font-family: 'Karla', sans-serif;
+    padding: 5px, 10px;
+    color: white;
+}
+
+#title {
+    font-family: 'Karla', sans-serif;
+    font-size: 30px;
+    padding: 5px, 10px;
+}
+
+a:link {
+    text-decoration: none;
+}
+
+a {
+    color: black;
+}
+
+#submit_button {
+    border-radius: 22px;
+    border: white solid;
+    background-color: white;
+    width: 100%;
+    font-family: 'Karla', sans-serif;
+}
+
+#submit_button:hover {
+    cursor: pointer;
+}
+
+@media (max-width: 950px) {
+    .box {
+        width: 400px;
+    }
+}
+
+@media (max-width: 500px) {
+    .box {
+        width: 90vw;
+    }
+}
