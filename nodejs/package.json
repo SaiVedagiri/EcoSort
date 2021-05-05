@@ -10,6 +10,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.17.1"
+    "apple-auth": "^1.0.7",
+    "aws-sdk": "^2.900.0",
+    "axios": "^0.21.1",
+    "bcryptjs": "^2.4.3",
+    "dotenv": "^8.5.1",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "node-rsa": "^1.1.1",
+    "ws": "^7.4.5"
   }
 }
