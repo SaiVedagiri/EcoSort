@@ -7,7 +7,8 @@ import Error from "./Error";
 import Terms from "./Terms";
 import Privacy from "./Privacy";
 import AppleUser from "./AppleUser";
-
+import RegisterDevice from "./RegisterDevice";
+import Dashboard from "./Dashboard";
 
 function App() {
   return (
@@ -20,6 +21,8 @@ function App() {
           <Route exact path="/privacy" component={Privacy} />
           <Route exact path="/terms" component={Terms} />
           <Route exact path="/appleUser" component={AppleUser} />
+          <Route exact path="/registerDevice" component={RegisterDevice} />
+          <Route exact path="/dashboard" component={Dashboard} />
           <Route component={Error} />
         </Switch>
       </BrowserRouter>

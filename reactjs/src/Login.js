@@ -58,7 +58,11 @@ class Login extends React.Component {
     sessionStorage.setItem("gUser", "true");
     sessionStorage.setItem("userKey", json.userkey);
     sessionStorage.setItem("profilePic", profile.getImageUrl());
-    window.location = "host";
+    if(json.deviceid != null && json.deviceid != ""){
+      window.location = "dashboard";
+    } else{
+      window.location = "registerDevice"
+    }
   }
 
   onFailure(error) {
@@ -94,7 +98,11 @@ class Login extends React.Component {
       sessionStorage.setItem("userKey", json.data);
       sessionStorage.setItem("gUser", "false");
       sessionStorage.setItem("profilePic", json.imageurl);
-      window.location = "host";
+      if(json.deviceid != null && json.deviceid != ""){
+        window.location = "dashboard";
+      } else{
+        window.location = "registerDevice"
+      }
     }
   }
 

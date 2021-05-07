@@ -84,9 +84,10 @@ express()
     const returnVal = {
       userkey: userKey,
       imageurl: "assets/default.png",
+      deviceid: myVal2.deviceID
     };
     res.redirect(
-      `https://ecosort.saivedagiri.com/appleUser?userkey=${returnVal.userkey}&imageurl=${returnVal.imageurl}`
+      `https://ecosort.saivedagiri.com/appleUser?userkey=${returnVal.userkey}&imageurl=${returnVal.imageurl}&deviceid=${returnVal.deviceid}`
     );
   })
   .set("views", path.join(__dirname, "views"))
@@ -138,6 +139,7 @@ express()
     const returnVal = {
       userkey: userKey,
       imageurl: "assets/default.png",
+      deviceid: myVal.deviceID
     };
     res.send(returnVal);
   })
@@ -157,6 +159,8 @@ express()
     let userKey = myVal2.userID;
     const returnVal = {
       userkey: userKey,
+      imageurl: imageURL,
+      deviceid: myVal.deviceID
     };
     res.send(returnVal);
   })
@@ -179,6 +183,7 @@ express()
           data: "Valid",
           id: myVal.userID,
           imageurl: "assets/default.png",
+          deviceid: myVal.deviceID
         };
       } else {
         returnVal = {
@@ -187,6 +192,13 @@ express()
       }
     }
     res.send(returnVal);
+  })
+  .post("/registerDevice", async function (req, res) {
+    let info = req.headers;
+    let userID = info.userid;
+    let deviceID = info.deviceID;
+    let myVal = await updateUser(userID, "deviceID", deviceID);
+    res.sendStatusCode(200);
   })
   .post("/signUp", async function (req, res) {
     let info = req.headers;
@@ -345,34 +357,6 @@ async function searchUserApple(key) {
   return returnVal;
 }
 
-async function addUserGoogle(id, email, imageURL, name, password) {
-  let characters =
-    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-";
-  let charactersLength = characters.length;
-  let params = {
-    TableName: "EcoSort-Users",
-    Item: {
-      userID: id,
-      email: email,
-      imageURL: imageURL,
-      name: name,
-      password: password,
-    },
-  };
-
-  console.log("Adding a new item...");
-  await docClient.put(params, async function (err, data) {
-    if (err) {
-      console.error(
-        "Unable to add item. Error JSON:",
-        JSON.stringify(err, null, 2)
-      );
-    } else {
-      console.log("Added item successfully");
-    }
-  });
-}
-
 async function addUser(email, imageURL, name, password) {
   let username = "";
   let characters =
@@ -434,6 +418,32 @@ async function addAppleUser(email, sub) {
       );
     } else {
       console.log("Added item successfully");
+    }
+  });
+}
+
+async function updateUser(userID, paramName, paramVal) {
+  let params = {
+    TableName: "EcoSort-Users",
+    Key: {
+      userID,
+    },
+    UpdateExpression: "set " + paramName + " = :v",
+    ExpressionAttributeValues: {
+      ":v": paramVal,
+    },
+    ReturnValues: "UPDATED_NEW",
+  };
+
+  console.log("Updating the item...");
+  await docClient.update(params, function (err, data) {
+    if (err) {
+      console.error(
+        "Unable to update item. Error JSON:",
+        JSON.stringify(err, null, 2)
+      );
+    } else {
+      console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
     }
   });
 }

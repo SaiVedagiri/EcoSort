@@ -11,7 +11,11 @@ class AppleUser extends React.Component {
     console.log(JSON.parse(user));
     sessionStorage.setItem("userKey", params.get("userkey"));
     sessionStorage.setItem("profilePic", params.get("imageurl"));
-    window.location = "landing";
+    if(params.get("deviceid") != null && params.get("deviceid") != ""){
+      window.location = "dashboard";
+    } else{
+      window.location = "registerDevice"
+    }
   }
 
   render() {

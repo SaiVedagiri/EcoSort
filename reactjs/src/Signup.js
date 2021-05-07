@@ -60,7 +60,11 @@ class Signup extends React.Component {
         let json = await response.json();
         sessionStorage.setItem('userKey', json.userkey);
         sessionStorage.setItem('profilePic', profile.getImageUrl());
-        window.location = 'host';
+        if(json.deviceid != null && json.deviceid != ""){
+            window.location = "dashboard";
+          } else{
+            window.location = "registerDevice"
+          }
     }
 
     onFailure(error) {
@@ -93,7 +97,7 @@ class Signup extends React.Component {
         } else {
             sessionStorage.setItem('userKey', json.id);
             sessionStorage.setItem('profilePic', json.imageurl);
-            window.location.href = "host";
+            window.location.href = "registerDevice";
         }
     }
 
