@@ -117,7 +117,7 @@ class _LogInPageState extends State<LogInPage> {
               ),
             ),
             ListTile(
-                title: RaisedButton(
+                title: ElevatedButton(
                     onPressed: () async {
                       Map<String, String> headers = {
                         "Content-type": "application/json",
@@ -132,15 +132,6 @@ class _LogInPageState extends State<LogInPage> {
                       if (resultJson["data"] == "Valid") {
                         resultJson = jsonDecode(response.body);
                         prefs.setString('userID', resultJson["userkey"]);
-                        dispose() {
-                          SystemChrome.setPreferredOrientations([
-                            DeviceOrientation.landscapeRight,
-                            DeviceOrientation.landscapeLeft,
-                            DeviceOrientation.portraitUp,
-                            DeviceOrientation.portraitDown,
-                          ]);
-                          super.dispose();
-                        }
 
                         if (resultJson["deviceid"] != null &&
                             resultJson["deviceid"] != "") {
@@ -171,11 +162,10 @@ class _LogInPageState extends State<LogInPage> {
               ),
             ),
             SizedBox(height: 50),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () async {
                 final GoogleSignInAccount? googleSignInAccount =
                     await googleSignIn.signIn();
-                print(googleSignInAccount!.email);
                 Map<String, String> headers = {
                   "Content-type": "application/json",
                   "Origin": "*",
@@ -186,15 +176,6 @@ class _LogInPageState extends State<LogInPage> {
                     headers: headers);
                 var resultJson = jsonDecode(response.body);
                 prefs.setString('userID', resultJson["userkey"]);
-                dispose() {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeRight,
-                    DeviceOrientation.landscapeLeft,
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown,
-                  ]);
-                  super.dispose();
-                }
 
                 if (resultJson["deviceid"] != null &&
                     resultJson["deviceid"] != "") {

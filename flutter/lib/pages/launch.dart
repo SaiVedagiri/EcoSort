@@ -54,18 +54,15 @@ class _LaunchPageState extends State<LaunchPage> {
                   height: 150,
                 )),
             ListTile(
-              title: RaisedButton(
-                color: HexColor("00b2d1"),
+              title: ElevatedButton(
+                style: ButtonStyle(
+                  backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                        (Set<MaterialState> states) {
+                          return HexColor("00b2d1");
+                    },
+                  ),
+                ),
                 onPressed: () {
-                  dispose() {
-                    SystemChrome.setPreferredOrientations([
-                      DeviceOrientation.landscapeRight,
-                      DeviceOrientation.landscapeLeft,
-                      DeviceOrientation.portraitUp,
-                      DeviceOrientation.portraitDown,
-                    ]);
-                    super.dispose();
-                  }
 
                   Navigator.push(
                       context,
@@ -76,18 +73,15 @@ class _LaunchPageState extends State<LaunchPage> {
               ),
             ),
             ListTile(
-                title: RaisedButton(
-                    color: HexColor("ff5ded"),
+                title: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          return HexColor("ff5ded");
+                        },
+                      ),
+                    ),
                     onPressed: () {
-                      dispose() {
-                        SystemChrome.setPreferredOrientations([
-                          DeviceOrientation.landscapeRight,
-                          DeviceOrientation.landscapeLeft,
-                          DeviceOrientation.portraitUp,
-                          DeviceOrientation.portraitDown,
-                        ]);
-                        super.dispose();
-                      }
 
                       Navigator.push(
                           context,
@@ -96,8 +90,14 @@ class _LaunchPageState extends State<LaunchPage> {
                     },
                     child: Text("Signup"))),
             ListTile(
-                title: RaisedButton(
-                    color: HexColor("c6c6c8"),
+                title: ElevatedButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                            (Set<MaterialState> states) {
+                          return HexColor("c6c6c8");
+                        },
+                      ),
+                    ),
                     onPressed: () async {
                       await widget.browser.open(
                           url: Uri.parse(

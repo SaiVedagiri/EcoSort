@@ -153,7 +153,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
             ListTile(
-                title: RaisedButton(
+                title: ElevatedButton(
                     onPressed: () async {
                       Map<String, String> headers = {
                         "Content-type": "application/json",
@@ -171,15 +171,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       if (resultJson["data"] == "Valid") {
                         resultJson = jsonDecode(response.body);
                         prefs.setString('userID', resultJson["userkey"]);
-                        dispose() {
-                          SystemChrome.setPreferredOrientations([
-                            DeviceOrientation.landscapeRight,
-                            DeviceOrientation.landscapeLeft,
-                            DeviceOrientation.portraitUp,
-                            DeviceOrientation.portraitDown,
-                          ]);
-                          super.dispose();
-                        }
 
                         Navigator.push(
                             context,
@@ -201,7 +192,7 @@ class _SignUpPageState extends State<SignUpPage> {
               ),
             ),
             SizedBox(height: 50),
-            RaisedButton(
+            ElevatedButton(
               onPressed: () async {
                 final GoogleSignInAccount? googleSignInAccount =
                     await googleSignIn.signIn();
@@ -215,15 +206,6 @@ class _SignUpPageState extends State<SignUpPage> {
                     headers: headers);
                 var resultJson = jsonDecode(response.body);
                 prefs.setString('userID', resultJson["userkey"]);
-                dispose() {
-                  SystemChrome.setPreferredOrientations([
-                    DeviceOrientation.landscapeRight,
-                    DeviceOrientation.landscapeLeft,
-                    DeviceOrientation.portraitUp,
-                    DeviceOrientation.portraitDown,
-                  ]);
-                  super.dispose();
-                }
 
                 Navigator.push(
                     context,
