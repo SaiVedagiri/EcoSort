@@ -3,15 +3,12 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:google_sign_in/google_sign_in.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:ecosort/pages/home.dart';
+import 'package:ecosort/pages/registerDevice.dart';
 
 String username = "";
 String password = "";
@@ -31,14 +28,13 @@ class LogInPage extends StatefulWidget {
 }
 
 class _LogInPageState extends State<LogInPage> {
-
   @override
-  initState(){
+  initState() {
     super.initState();
     initStateFunction();
   }
 
-  initStateFunction () async{
+  initStateFunction() async {
     prefs = await SharedPreferences.getInstance();
   }
 
@@ -130,7 +126,7 @@ class _LogInPageState extends State<LogInPage> {
                         "password": password
                       };
                       Response response = await post(
-                          'https://ecosort.saivedagiri.com/signIn',
+                          Uri.parse('https://ecosort.saivedagiri.com/signIn'),
                           headers: headers);
                       var resultJson = jsonDecode(response.body);
                       if (resultJson["data"] == "Valid") {
@@ -146,10 +142,20 @@ class _LogInPageState extends State<LogInPage> {
                           super.dispose();
                         }
 
-                        Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) => new HomePage()));
+                        if (resultJson["deviceid"] != null &&
+                            resultJson["deviceid"] != "") {
+                          prefs.setString('deviceID', resultJson["deviceid"]);
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) => new HomePage()));
+                        } else {
+                          Navigator.push(
+                              context,
+                              new MaterialPageRoute(
+                                  builder: (context) =>
+                                      new RegisterDevicePage()));
+                        }
                       } else {
                         createAlertDialog(context, "Error", resultJson["data"]);
                       }
@@ -167,32 +173,42 @@ class _LogInPageState extends State<LogInPage> {
             SizedBox(height: 50),
             RaisedButton(
               onPressed: () async {
-                final GoogleSignInAccount googleSignInAccount =
-                await googleSignIn.signIn();
+                final GoogleSignInAccount? googleSignInAccount =
+                    await googleSignIn.signIn();
+                print(googleSignInAccount!.email);
                 Map<String, String> headers = {
                   "Content-type": "application/json",
                   "Origin": "*",
-                  "email": googleSignInAccount.email
+                  "email": googleSignInAccount!.email
                 };
                 Response response = await post(
-                    'https://ecosort.saivedagiri.com/signIn',
+                    Uri.parse('https://ecosort.saivedagiri.com/googleSignIn'),
                     headers: headers);
                 var resultJson = jsonDecode(response.body);
                 prefs.setString('userID', resultJson["userkey"]);
-                  dispose() {
-                    SystemChrome.setPreferredOrientations([
-                      DeviceOrientation.landscapeRight,
-                      DeviceOrientation.landscapeLeft,
-                      DeviceOrientation.portraitUp,
-                      DeviceOrientation.portraitDown,
-                    ]);
-                    super.dispose();
-                  }
+                dispose() {
+                  SystemChrome.setPreferredOrientations([
+                    DeviceOrientation.landscapeRight,
+                    DeviceOrientation.landscapeLeft,
+                    DeviceOrientation.portraitUp,
+                    DeviceOrientation.portraitDown,
+                  ]);
+                  super.dispose();
+                }
 
+                if (resultJson["deviceid"] != null &&
+                    resultJson["deviceid"] != "") {
+                  prefs.setString('deviceID', resultJson["deviceid"]);
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
                           builder: (context) => new HomePage()));
+                } else {
+                  Navigator.push(
+                      context,
+                      new MaterialPageRoute(
+                          builder: (context) => new RegisterDevicePage()));
+                }
               },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -243,7 +259,7 @@ class _LogInPageState extends State<LogInPage> {
                     scheme: 'https',
                     host: 'ecosort.saivedagiri.com',
                     path: '/sign_in_with_apple',
-                    queryParameters: <String, String>{
+                    queryParameters: <String, String?>{
                       'code': credential.authorizationCode,
                       'firstName': credential.givenName,
                       'lastName': credential.familyName,
@@ -257,14 +273,21 @@ class _LogInPageState extends State<LogInPage> {
                   );
 
                   var resultJson = jsonDecode(response.body);
-                  print(resultJson);
                   prefs.setString('userID', resultJson["userkey"]);
 
+                  if (resultJson["deviceid"] != null &&
+                      resultJson["deviceid"] != "") {
+                    prefs.setString('deviceID', resultJson["deviceid"]);
                     Navigator.push(
                         context,
                         new MaterialPageRoute(
                             builder: (context) => new HomePage()));
-
+                  } else {
+                    Navigator.push(
+                        context,
+                        new MaterialPageRoute(
+                            builder: (context) => new RegisterDevicePage()));
+                  }
                 },
               ),
             ),

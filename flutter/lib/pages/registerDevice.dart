@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+class RegisterDevicePage extends StatefulWidget {
+  RegisterDevicePage({Key? key}) : super(key: key);
 
   @override
-  _HomePageState createState() => _HomePageState();
+  _RegisterDevicePageState createState() => _RegisterDevicePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _RegisterDevicePageState extends State<RegisterDevicePage> {
   Future<dynamic> createAlertDialog(
       BuildContext context, String title, String body) {
     return showDialog(
@@ -57,7 +57,7 @@ class _HomePageState extends State<HomePage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("Home"),
+        title: Text("Register Device"),
       ),
       body: Center(
         child: Column(

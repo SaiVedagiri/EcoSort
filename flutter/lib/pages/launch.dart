@@ -4,21 +4,19 @@ import 'package:ecosort/pages/login.dart';
 import 'package:ecosort/pages/signup.dart';
 import 'package:ecosort/components/hex.dart';
 import 'package:ecosort/components/browser.dart';
-// ignore: import_of_legacy_library_into_null_safe
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class LaunchPage extends StatefulWidget {
   LaunchPage({Key? key}) : super(key: key);
 
   final ChromeSafariBrowser browser =
-      new MyChromeSafariBrowser(new MyInAppBrowser());
+      new MyChromeSafariBrowser(new InAppBrowser());
 
   @override
   _LaunchPageState createState() => _LaunchPageState();
 }
 
 class _LaunchPageState extends State<LaunchPage> {
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -102,7 +100,8 @@ class _LaunchPageState extends State<LaunchPage> {
                     color: HexColor("c6c6c8"),
                     onPressed: () async {
                       await widget.browser.open(
-                          url: "https://ecosort.saivedagiri.com/privacy",
+                          url: Uri.parse(
+                              "https://ecosort.saivedagiri.com/privacy"),
                           options: ChromeSafariBrowserClassOptions(
                               android: AndroidChromeCustomTabsOptions(
                                   addDefaultShareMenuItem: true,
