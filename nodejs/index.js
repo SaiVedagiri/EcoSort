@@ -197,8 +197,29 @@ express()
     let info = req.headers;
     let userID = info.userid;
     let deviceID = info.deviceID;
-    let myVal = await updateUser(userID, "deviceID", deviceID);
+    await updateUser(userID, "deviceID", deviceID);
     res.sendStatusCode(200);
+  })
+  .post("/createDevice", async function (req, res) {
+    let info = req.headers;
+    let deviceID = info.deviceID;
+    await createDevice(deviceID);
+    res.sendStatusCode(200);
+  })
+  .post("/verifyRegistration", async function (req, res) {
+    let info = req.headers;
+    let userID = info.userid;
+    let myVal = await searchUserID(userID);
+    if (myVal.deviceID) {
+      returnVal = {
+        data: "Valid",
+      };
+    } else {
+      returnVal = {
+        data: "Invalid",
+      };
+    }
+    res.send(returnVal);
   })
   .post("/signUp", async function (req, res) {
     let info = req.headers;
@@ -389,6 +410,27 @@ async function addUser(email, imageURL, name, password) {
   });
 }
 
+async function createDevice(deviceID) {
+  let params = {
+    TableName: "EcoSort-Devices",
+    Item: {
+      deviceID: deviceID
+    },
+  };
+
+  console.log("Adding a new item...");
+  await docClient.put(params, async function (err, data) {
+    if (err) {
+      console.error(
+        "Unable to add item. Error JSON:",
+        JSON.stringify(err, null, 2)
+      );
+    } else {
+      console.log("Added item successfully");
+    }
+  });
+}
+
 async function addAppleUser(email, sub) {
   let username = "";
   let characters =
@@ -427,6 +469,32 @@ async function updateUser(userID, paramName, paramVal) {
     TableName: "EcoSort-Users",
     Key: {
       userID,
+    },
+    UpdateExpression: "set " + paramName + " = :v",
+    ExpressionAttributeValues: {
+      ":v": paramVal,
+    },
+    ReturnValues: "UPDATED_NEW",
+  };
+
+  console.log("Updating the item...");
+  await docClient.update(params, function (err, data) {
+    if (err) {
+      console.error(
+        "Unable to update item. Error JSON:",
+        JSON.stringify(err, null, 2)
+      );
+    } else {
+      console.log("UpdateItem succeeded:", JSON.stringify(data, null, 2));
+    }
+  });
+}
+
+async function updateDevice(deviceID, paramName, paramVal) {
+  let params = {
+    TableName: "EcoSort-Devices",
+    Key: {
+      deviceID,
     },
     UpdateExpression: "set " + paramName + " = :v",
     ExpressionAttributeValues: {

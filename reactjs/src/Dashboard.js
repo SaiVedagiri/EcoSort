@@ -6,7 +6,11 @@ import Footer from "./Footer";
 
 
 class Dashboard extends React.Component {
-
+    componentDidMount() {
+        if(sessionStorage.getItem("userKey") == null || sessionStorage.getItem("userKey") == ""){
+            window.location = "login";
+        }
+    }
     render() {
         return (
             <div>
