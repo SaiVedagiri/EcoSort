@@ -69,7 +69,7 @@ class _LaunchPageState extends State<LaunchPage> {
                       new MaterialPageRoute(
                           builder: (context) => new LogInPage()));
                 },
-                child: Text("Login"),
+                child: Text("Login", style: TextStyle(color: Colors.black),),
               ),
             ),
             ListTile(
@@ -88,7 +88,7 @@ class _LaunchPageState extends State<LaunchPage> {
                           new MaterialPageRoute(
                               builder: (context) => new SignUpPage()));
                     },
-                    child: Text("Signup"))),
+                    child: Text("Signup", style: TextStyle(color: Colors.black),))),
             ListTile(
                 title: ElevatedButton(
                     style: ButtonStyle(
@@ -112,7 +112,7 @@ class _LaunchPageState extends State<LaunchPage> {
                                   presentationStyle: IOSUIModalPresentationStyle
                                       .OVER_FULL_SCREEN)));
                     },
-                    child: Text("Privacy Policy"))),
+                    child: Text("Privacy Policy", style: TextStyle(color: Colors.black),))),
           ],
         ),
       ),

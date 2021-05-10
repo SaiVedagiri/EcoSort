@@ -170,13 +170,13 @@ class _SignUpPageState extends State<SignUpPage> {
                       var resultJson = jsonDecode(response.body);
                       if (resultJson["data"] == "Valid") {
                         resultJson = jsonDecode(response.body);
-                        prefs.setString('userID', resultJson["userkey"]);
+                        prefs.setString('userID', resultJson["id"]);
 
-                        Navigator.push(
-                            context,
-                            new MaterialPageRoute(
-                                builder: (context) =>
-                                    new RegisterDevicePage()));
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (BuildContext context) =>
+                                    RegisterDevicePage()),
+                            (Route<dynamic> route) => false);
                       } else {
                         createAlertDialog(context, "Error", resultJson["data"]);
                       }
@@ -193,6 +193,13 @@ class _SignUpPageState extends State<SignUpPage> {
             ),
             SizedBox(height: 50),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    return Colors.white;
+                  },
+                ),
+              ),
               onPressed: () async {
                 final GoogleSignInAccount? googleSignInAccount =
                     await googleSignIn.signIn();
@@ -207,10 +214,11 @@ class _SignUpPageState extends State<SignUpPage> {
                 var resultJson = jsonDecode(response.body);
                 prefs.setString('userID', resultJson["userkey"]);
 
-                Navigator.push(
-                    context,
-                    new MaterialPageRoute(
-                        builder: (context) => new RegisterDevicePage()));
+                Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(
+                        builder: (BuildContext context) =>
+                            RegisterDevicePage()),
+                    (Route<dynamic> route) => false);
               },
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
@@ -275,13 +283,13 @@ class _SignUpPageState extends State<SignUpPage> {
                   );
 
                   var resultJson = jsonDecode(response.body);
-                  print(resultJson);
                   prefs.setString('userID', resultJson["userkey"]);
 
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => new RegisterDevicePage()));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              RegisterDevicePage()),
+                      (Route<dynamic> route) => false);
                 },
               ),
             ),

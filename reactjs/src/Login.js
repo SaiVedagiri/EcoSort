@@ -95,7 +95,7 @@ class Login extends React.Component {
     } else if (json.data === "Incorrect email address.") {
       this.notSame("Incorrect email address.");
     } else {
-      sessionStorage.setItem("userKey", json.data);
+      sessionStorage.setItem("userKey", json.id);
       sessionStorage.setItem("gUser", "false");
       sessionStorage.setItem("profilePic", json.imageurl);
       if(json.deviceid != null && json.deviceid != ""){

@@ -207,13 +207,13 @@ express()
     let userID = info.userid;
     let deviceID = info.deviceid;
     await updateUser(userID, "deviceID", deviceID);
-    res.sendStatusCode(200);
+    res.sendStatus(200);
   })
   .post("/createDevice", async function (req, res) {
     let info = req.headers;
     let deviceID = info.deviceid;
     await createDevice(deviceID);
-    res.sendStatusCode(200);
+    res.sendStatus(200);
   })
   .post("/analyzeImageGoogle", async function (req, res) {
     let info = req.headers;

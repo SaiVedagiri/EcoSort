@@ -131,21 +131,22 @@ class _LogInPageState extends State<LogInPage> {
                       var resultJson = jsonDecode(response.body);
                       if (resultJson["data"] == "Valid") {
                         resultJson = jsonDecode(response.body);
-                        prefs.setString('userID', resultJson["userkey"]);
+                        prefs.setString('userID', resultJson["id"]);
 
                         if (resultJson["deviceid"] != null &&
                             resultJson["deviceid"] != "") {
                           prefs.setString('deviceID', resultJson["deviceid"]);
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) => new HomePage()));
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      HomePage()),
+                              (Route<dynamic> route) => false);
                         } else {
-                          Navigator.push(
-                              context,
-                              new MaterialPageRoute(
-                                  builder: (context) =>
-                                      new RegisterDevicePage()));
+                          Navigator.of(context).pushAndRemoveUntil(
+                              MaterialPageRoute(
+                                  builder: (BuildContext context) =>
+                                      RegisterDevicePage()),
+                              (Route<dynamic> route) => false);
                         }
                       } else {
                         createAlertDialog(context, "Error", resultJson["data"]);
@@ -163,6 +164,13 @@ class _LogInPageState extends State<LogInPage> {
             ),
             SizedBox(height: 50),
             ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.resolveWith<Color>(
+                  (Set<MaterialState> states) {
+                    return Colors.white;
+                  },
+                ),
+              ),
               onPressed: () async {
                 final GoogleSignInAccount? googleSignInAccount =
                     await googleSignIn.signIn();
@@ -180,15 +188,16 @@ class _LogInPageState extends State<LogInPage> {
                 if (resultJson["deviceid"] != null &&
                     resultJson["deviceid"] != "") {
                   prefs.setString('deviceID', resultJson["deviceid"]);
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => new HomePage()));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (BuildContext context) => HomePage()),
+                      (Route<dynamic> route) => false);
                 } else {
-                  Navigator.push(
-                      context,
-                      new MaterialPageRoute(
-                          builder: (context) => new RegisterDevicePage()));
+                  Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                          builder: (BuildContext context) =>
+                              RegisterDevicePage()),
+                      (Route<dynamic> route) => false);
                 }
               },
               child: Padding(
@@ -259,15 +268,16 @@ class _LogInPageState extends State<LogInPage> {
                   if (resultJson["deviceid"] != null &&
                       resultJson["deviceid"] != "") {
                     prefs.setString('deviceID', resultJson["deviceid"]);
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) => new HomePage()));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => HomePage()),
+                        (Route<dynamic> route) => false);
                   } else {
-                    Navigator.push(
-                        context,
-                        new MaterialPageRoute(
-                            builder: (context) => new RegisterDevicePage()));
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                RegisterDevicePage()),
+                        (Route<dynamic> route) => false);
                   }
                 },
               ),
