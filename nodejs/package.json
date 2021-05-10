@@ -10,6 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/vision": "^2.3.1",
     "apple-auth": "^1.0.7",
     "aws-sdk": "^2.900.0",
     "axios": "^0.21.1",

@@ -10,9 +10,13 @@ const NodeRSA = require("node-rsa");
 const jwt = require("jsonwebtoken");
 const AppleAuth = require("apple-auth");
 const dotenv = require("dotenv")
+const vision = require('@google-cloud/vision');
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
+
 const PORT = process.env.PORT || 80;
 dotenv.config()
+
+const client = new vision.ImageAnnotatorClient();
 
 const stub = ClarifaiStub.grpc();
 const metadata = new grpc.Metadata();
@@ -211,11 +215,28 @@ express()
     await createDevice(deviceID);
     res.sendStatusCode(200);
   })
-  .post("/analyzeImage", async function (req, res) {
+  .post("/analyzeImageGoogle", async function (req, res) {
+    let info = req.headers;
+    let imageURL = info.imageurl;
+    let returnVal = { data: "false" };
+    const [result] = await client.labelDetection(imageURL);
+    const labels = result.labelAnnotations;
+    console.log('Labels:');
+    labels.forEach((label) => {
+      label = label.description;
+      console.log(label);
+      if(label.toLowerCase().includes("glass") || label.toLowerCase().includes("plastic") || label.toLowerCase().includes("paper")){
+        returnVal.data = "true";
+        console.log("RECYCLABLE");
+      }
+    });
+    res.send(returnVal);
+  })
+  .post("/analyzeImageClarifai", async function (req, res) {
     let info = req.headers;
     let imageURL = info.imageurl;
     let returnVal = {data: "false"};
-    stub.PostModelOutputs(
+    await stub.PostModelOutputs(
       {
         // This is the model ID of a publicly available General model. You may use any other public or custom model ID.
         model_id: "aaa03c23b3724a16a56b629203edc62c",
@@ -236,13 +257,15 @@ express()
         console.log("Predicted concepts, with confidence values:")
         for (const c of response.outputs[0].data.concepts) {
           console.log(c.name + ": " + c.value);
-          if(c.name == "recycling" || c.name == "plastic" || c.name == "paper"){
-            returnVal.data = "true"
+          if(c.name.toLowerCase().includes("recycl") || c.name.toLowerCase().includes("plastic") || c.name.toLowerCase().includes("paper") || c.name.toLowerCase().includes("glass")){
+            returnVal.data = "true";
+            console.log("RECYCLABLE");
           }
         }
+        res.send(returnVal);
       }
     );
-    res.send(response);
+    
   })
   .post("/verifyRegistration", async function (req, res) {
     let info = req.headers;
