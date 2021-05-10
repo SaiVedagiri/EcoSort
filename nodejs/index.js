@@ -205,13 +205,13 @@ express()
   .post("/registerDevice", async function (req, res) {
     let info = req.headers;
     let userID = info.userid;
-    let deviceID = info.deviceID;
+    let deviceID = info.deviceid;
     await updateUser(userID, "deviceID", deviceID);
     res.sendStatusCode(200);
   })
   .post("/createDevice", async function (req, res) {
     let info = req.headers;
-    let deviceID = info.deviceID;
+    let deviceID = info.deviceid;
     await createDevice(deviceID);
     res.sendStatusCode(200);
   })
