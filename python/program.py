@@ -10,6 +10,7 @@ if __name__ == "__main__":
     frontServo = AngularServo(2)
     backServo = AngularServo(3)
     ultrasonic = DistanceSensor(echo=24, trigger=18, max_distance=1, threshold_distance=0.3)
+    deviceID = "OcfWUGKSdQ"
 
     frontServo.angle = 0
     backServo.angle = 0
@@ -25,10 +26,10 @@ if __name__ == "__main__":
 
         print(myImage['link'])
 
-        res1 = requests.post("https://ecosort.saivedagiri.com/analyzeImageClarifai", headers={"imageurl": myImage['link']})
-        res2 = requests.post("https://ecosort.saivedagiri.com/analyzeImageGoogle", headers={"imageurl": myImage['link']})
+        # res1 = requests.post("https://ecosort.saivedagiri.com/analyzeImageClarifai", headers={"imageurl": myImage['link'], "deviceid": deviceID})
+        res2 = requests.post("https://ecosort.saivedagiri.com/analyzeImageGoogle", headers={"imageurl": myImage['link'], "deviceid": deviceID})
 
-        print('clarifai: ', res1.text)
+        # print('clarifai: ', res1.text)
         print('google: ', res2.text)
 
         if 'true' in res2.text:

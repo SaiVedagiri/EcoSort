@@ -12,10 +12,11 @@ const AppleAuth = require("apple-auth");
 const dotenv = require("dotenv")
 const vision = require('@google-cloud/vision');
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
+const setTZ = require("set-tz");
 
 const PORT = process.env.PORT || 80;
+setTZ("America/New_York");
 dotenv.config()
-
 const client = new vision.ImageAnnotatorClient();
 
 const stub = ClarifaiStub.grpc();
@@ -218,24 +219,35 @@ express()
   .post("/analyzeImageGoogle", async function (req, res) {
     let info = req.headers;
     let imageURL = info.imageurl;
+    let deviceID = info.deviceid;
     let returnVal = { data: "false" };
     const [result] = await client.labelDetection(imageURL);
     const labels = result.labelAnnotations;
     console.log('Labels:');
+    let mainLabel = "trash";
     labels.forEach((label) => {
       label = label.description;
       console.log(label);
       if(label.toLowerCase().includes("glass") || label.toLowerCase().includes("plastic") || label.toLowerCase().includes("paper")){
         returnVal.data = "true";
+        if(mainLabel == "trash"){
+          mainLabel = label.toLowerCase();
+        }
         console.log("RECYCLABLE");
       }
     });
+    if(deviceID != null && deviceID != ""){
+      let currentTime = Date.now();
+      addImageToDevice(deviceID, imageURL, currentTime.toString(), returnVal.data, mainLabel);
+    }
     res.send(returnVal);
   })
   .post("/analyzeImageClarifai", async function (req, res) {
     let info = req.headers;
     let imageURL = info.imageurl;
+    let deviceID = info.deviceid;
     let returnVal = {data: "false"};
+    let mainLabel = "trash";
     await stub.PostModelOutputs(
       {
         // This is the model ID of a publicly available General model. You may use any other public or custom model ID.
@@ -259,13 +271,35 @@ express()
           console.log(c.name + ": " + c.value);
           if(c.name.toLowerCase().includes("recycl") || c.name.toLowerCase().includes("plastic") || c.name.toLowerCase().includes("paper") || c.name.toLowerCase().includes("glass")){
             returnVal.data = "true";
+            if(mainLabel == "trash"){
+              mainLabel = c.name.toLowerCase();
+            }
             console.log("RECYCLABLE");
           }
+        }
+        if(deviceID != null && deviceID != ""){
+          let currentTime = Date.now();
+          addImageToDevice(deviceID, imageURL, currentTime.toString(), returnVal.data, mainLabel);
         }
         res.send(returnVal);
       }
     );
     
+  })
+  .post("/getDeviceStats", async function (req, res) {
+    let info = req.headers;
+    let deviceID = info.deviceid;
+    let returnVal = { data: [] };
+    let myVal = await searchDeviceID(deviceID);
+    for(let i = 0; i < myVal.picNum; i++){
+      returnVal.data.push({
+        imageurl: myVal[`image${i}`],
+        time: myVal[`time${i}`],
+        result: myVal[`result${i}`],
+        label: myVal[`label${i}`],
+      });
+    }
+    res.send(returnVal);
   })
   .post("/verifyRegistration", async function (req, res) {
     let info = req.headers;
@@ -475,7 +509,8 @@ async function createDevice(deviceID) {
   let params = {
     TableName: "EcoSort-Devices",
     Item: {
-      deviceID: deviceID
+      deviceID: deviceID,
+      picNum: 0
     },
   };
 
@@ -490,6 +525,62 @@ async function createDevice(deviceID) {
       console.log("Added item successfully");
     }
   });
+}
+
+async function addImageToDevice(deviceID, imageURL,timestamp, result, label){
+  let params = {
+    TableName: "EcoSort-Devices",
+    KeyConditionExpression: "#key = :value",
+    ExpressionAttributeNames: {
+      "#key": "deviceID",
+    },
+    ExpressionAttributeValues: {
+      ":value": deviceID,
+    },
+  };
+
+  await docClient.query(params, async function (err, data) {
+    if (err) {
+      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+      return err;
+    } else {
+      console.log("Query succeeded.");
+      returnVal = await data.Items[0];
+    }
+  });
+  await new Promise((resolve, reject) => setTimeout(resolve, 200));
+  
+  let picNum = returnVal.picNum;
+  updateDevice(deviceID, "picNum", picNum+1);
+  updateDevice(deviceID, `image${picNum}`, imageURL);
+  updateDevice(deviceID, `time${picNum}`, timestamp);
+  updateDevice(deviceID, `result${picNum}`, result);
+  updateDevice(deviceID, `label${picNum}`, label);
+}
+
+async function searchDeviceID(key) {
+  let params = {
+    TableName: "EcoSort-Devices",
+    KeyConditionExpression: "#key = :value",
+    ExpressionAttributeNames: {
+      "#key": "deviceID",
+    },
+    ExpressionAttributeValues: {
+      ":value": key,
+    },
+  };
+
+  await docClient.query(params, async function (err, data) {
+    if (err) {
+      console.error("Unable to query. Error:", JSON.stringify(err, null, 2));
+      return err;
+    } else {
+      console.log("Query succeeded.");
+      returnVal = await data.Items[0];
+    }
+  });
+  await new Promise((resolve, reject) => setTimeout(resolve, 200));
+  return returnVal;
 }
 
 async function addAppleUser(email, sub) {
