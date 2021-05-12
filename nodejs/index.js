@@ -240,6 +240,11 @@ express()
     if(deviceID != null && deviceID != ""){
       let currentTime = moment().format('MM-DD-yyyy @ hh:mm:ss a');
       addImageToDevice(deviceID, imageURL, currentTime, returnVal.data, mainLabel);
+      wss.clients.forEach(function each(client) {
+        if (client.readyState === WebSocket.OPEN) {
+          client.send(deviceID);
+        }
+      });
     }
     res.send(returnVal);
   })
@@ -281,6 +286,11 @@ express()
         if(deviceID != null && deviceID != ""){
           let currentTime = moment().format('MM-DD-yyyy @ hh:mm:ss a');
           addImageToDevice(deviceID, imageURL, currentTime, returnVal.data, mainLabel);
+          wss.clients.forEach(function each(client) {
+            if (client.readyState === WebSocket.OPEN) {
+              client.send(deviceID);
+            }
+          });
         }
         res.send(returnVal);
       }
@@ -306,6 +316,11 @@ express()
     let info = req.headers;
     let deviceID = info.deviceid;
     let myVal = await clearDeviceID(deviceID);
+    wss.clients.forEach(function each(client) {
+      if (client.readyState === WebSocket.OPEN) {
+        client.send(deviceID);
+      }
+    });
     res.sendStatus(200);
   })
   .post("/verifyRegistration", async function (req, res) {

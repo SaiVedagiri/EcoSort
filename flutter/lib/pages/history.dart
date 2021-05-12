@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:async';
 import 'dart:convert';
-
+import 'package:web_socket_channel/io.dart';
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -86,6 +86,24 @@ class _HistoryPageState extends State<HistoryPage> {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
+
+    var channel =
+    IOWebSocketChannel.connect("wss://ecosort.saivedagiri.com:4211");
+    channel.stream.listen((message) async {
+      if (message == prefs.getString("deviceID")) {
+        Map<String, String> headers = {
+          "Content-type": "application/json",
+          "Origin": "*",
+          "deviceid": prefs.getString("deviceID")
+        };
+        Response response = await post(
+            Uri.parse('https://ecosort.saivedagiri.com/getDeviceStats'),
+            headers: headers);
+        var resultJson = jsonDecode(response.body);
+        historyList = resultJson['data'];
+        setState(() {});
+      }
+    });
 
     return Scaffold(
         appBar: AppBar(title: Text("Device History"), actions: <Widget>[
