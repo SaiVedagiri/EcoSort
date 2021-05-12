@@ -32,16 +32,16 @@ if __name__ == "__main__":
         # print('clarifai: ', res1.text)
         print('google: ', res2.text)
 
-        if 'true' in res2.text:
-            print('Recycling now!')
+        if 'false' in res2.text:
+            print('Trashing now!')
             frontServo.angle = -90
             backServo.angle = 90
             time.sleep(1)
             frontServo.angle = 0
             backServo.angle = 0
 
-        elif 'false' in res2.text:
-            print('Trashing now!')
+        elif 'true' in res2.text:
+            print('Recycling now!')
             frontServo.angle = 90
             backServo.angle = -90
             time.sleep(1)
