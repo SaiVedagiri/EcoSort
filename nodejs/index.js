@@ -13,6 +13,7 @@ const dotenv = require("dotenv")
 const vision = require('@google-cloud/vision');
 const { ClarifaiStub, grpc } = require("clarifai-nodejs-grpc");
 const setTZ = require("set-tz");
+const moment = require('moment');
 
 const PORT = process.env.PORT || 80;
 setTZ("America/New_York");
@@ -237,8 +238,8 @@ express()
       }
     });
     if(deviceID != null && deviceID != ""){
-      let currentTime = Date.now();
-      addImageToDevice(deviceID, imageURL, currentTime.toString(), returnVal.data, mainLabel);
+      let currentTime = moment().format('MM-DD-yyyy @ hh:mm:ss a');
+      addImageToDevice(deviceID, imageURL, currentTime, returnVal.data, mainLabel);
     }
     res.send(returnVal);
   })
@@ -278,8 +279,8 @@ express()
           }
         }
         if(deviceID != null && deviceID != ""){
-          let currentTime = Date.now();
-          addImageToDevice(deviceID, imageURL, currentTime.toString(), returnVal.data, mainLabel);
+          let currentTime = moment().format('MM-DD-yyyy @ hh:mm:ss a');
+          addImageToDevice(deviceID, imageURL, currentTime, returnVal.data, mainLabel);
         }
         res.send(returnVal);
       }
@@ -300,6 +301,12 @@ express()
       });
     }
     res.send(returnVal);
+  })
+  .post("/clearDeviceStats", async function (req, res) {
+    let info = req.headers;
+    let deviceID = info.deviceid;
+    let myVal = await clearDeviceID(deviceID);
+    res.sendStatus(200);
   })
   .post("/verifyRegistration", async function (req, res) {
     let info = req.headers;
@@ -525,6 +532,29 @@ async function createDevice(deviceID) {
       console.log("Added item successfully");
     }
   });
+}
+
+async function clearDeviceID(deviceID) {
+  let params = {
+    TableName: "EcoSort-Devices",
+    Key: {
+      deviceID: deviceID,
+    },
+  };
+
+  console.log("Attempting a conditional delete...");
+    await docClient.delete(params, async function (err, data) {
+      if (err) {
+        console.error(
+          "Unable to delete item. Error JSON:",
+          JSON.stringify(err, null, 2)
+        );
+      } else {
+        console.log("Deleted item successfully");
+      }
+    });
+
+  createDevice(deviceID);
 }
 
 async function addImageToDevice(deviceID, imageURL,timestamp, result, label){

@@ -2,11 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
 import 'dart:async';
 import 'dart:convert';
-import 'package:ecosort/pages/displayPicture.dart';
+import 'displayPicture.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:imgur/imgur.dart' as imgur;
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart';
+
+import 'history.dart';
 
 // A screen that allows users to take a picture using a given camera.
 class TakePicturePage extends StatefulWidget {
@@ -47,7 +51,7 @@ class TakePicturePageState extends State<TakePicturePage> {
     client = imgur.Imgur(imgur.Authentication.fromClientId('20c527d1ac24c2f'));
 
     initialized = true;
-    setState((){});
+    setState(() {});
   }
 
   @override
@@ -64,19 +68,49 @@ class TakePicturePageState extends State<TakePicturePage> {
       // Wait until the controller is initialized before displaying the
       // camera preview. Use a FutureBuilder to display a loading spinner
       // until the controller has finished initializing.
-      body: initialized ? FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            // If the Future is complete, display the preview.
-            return CameraPreview(_controller);
-          } else {
-            // Otherwise, display a loading indicator.
-            return Center(child: CircularProgressIndicator());
-          }
-        },
-      ) : CircularProgressIndicator(),
-      floatingActionButton: FloatingActionButton(
+      body: initialized
+          ? FutureBuilder<void>(
+              future: _initializeControllerFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.done) {
+                  // If the Future is complete, display the preview.
+                  return CameraPreview(_controller);
+                } else {
+                  // Otherwise, display a loading indicator.
+                  return Center(child: CircularProgressIndicator());
+                }
+              },
+            )
+          : Center(child: CircularProgressIndicator());
+      bottomNavigationBar: BottomAppBar(
+        child: new Row(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            children: <Widget>[
+              IconButton(
+                icon: Icon(Icons.history),
+                color: Colors.grey,
+                onPressed: () {
+                  Navigator.pushReplacement(
+                    context,
+                    PageRouteBuilder(
+                      pageBuilder: (context, animation1, animation2) =>
+                          HistoryPage(),
+                      transitionDuration: Duration(seconds: 0),
+                    ),
+                  );
+                },
+              ),
+              IconButton(
+                icon: Icon(Icons.camera_alt),
+                onPressed: () {
+
+                },
+              ),
+            ]),
+      ),
+      floatingActionButton: initialized
+          ? FloatingActionButton(
         child: Icon(Icons.camera_alt),
         // Provide an onPressed callback.
         onPressed: () async {
@@ -101,11 +135,10 @@ class TakePicturePageState extends State<TakePicturePage> {
             bool recyclable = true;
             initialized = false;
 
-            setState((){});
+            setState(() {});
 
             await client.image
-                .uploadImage(
-                imagePath: file.path)
+                .uploadImage(imagePath: file.path)
                 .then((image) async {
               Map<String, String> headers = {
                 "Content-type": "application/json",
@@ -114,10 +147,11 @@ class TakePicturePageState extends State<TakePicturePage> {
               };
 
               Response response = await post(
-                  Uri.parse('https://ecosort.saivedagiri.com/analyzeImageGoogle'),
+                  Uri.parse(
+                      'https://ecosort.saivedagiri.com/analyzeImageGoogle'),
                   headers: headers);
               var resultJson = jsonDecode(response.body);
-              if(resultJson["data"] == "false"){
+              if (resultJson["data"] == "false") {
                 recyclable = false;
               }
             });
@@ -126,7 +160,8 @@ class TakePicturePageState extends State<TakePicturePage> {
             Navigator.pushReplacement(
               context,
               MaterialPageRoute(
-                builder: (context) => DisplayPicturePage(imagePath: file.path, recyclable: recyclable),
+                builder: (context) => DisplayPicturePage(
+                    imagePath: file.path, recyclable: recyclable),
               ),
             );
           } catch (e) {
@@ -134,7 +169,7 @@ class TakePicturePageState extends State<TakePicturePage> {
             print(e);
           }
         },
-      ),
+      ) : null,
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
     );
   }

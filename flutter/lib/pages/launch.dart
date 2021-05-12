@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:ecosort/pages/login.dart';
-import 'package:ecosort/pages/signup.dart';
-import 'package:ecosort/components/hex.dart';
-import 'package:ecosort/components/browser.dart';
+import 'login.dart';
+import 'signup.dart';
+import '../components/hex.dart';
+import '../components/browser.dart';
 import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 
 class LaunchPage extends StatefulWidget {
@@ -57,43 +57,47 @@ class _LaunchPageState extends State<LaunchPage> {
               title: ElevatedButton(
                 style: ButtonStyle(
                   backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                        (Set<MaterialState> states) {
-                          return HexColor("00b2d1");
+                    (Set<MaterialState> states) {
+                      return HexColor("00b2d1");
                     },
                   ),
                 ),
                 onPressed: () {
-
                   Navigator.push(
                       context,
                       new MaterialPageRoute(
                           builder: (context) => new LogInPage()));
                 },
-                child: Text("Login", style: TextStyle(color: Colors.black),),
+                child: Text(
+                  "Login",
+                  style: TextStyle(color: Colors.black),
+                ),
               ),
             ),
             ListTile(
                 title: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
+                        (Set<MaterialState> states) {
                           return HexColor("ff5ded");
                         },
                       ),
                     ),
                     onPressed: () {
-
                       Navigator.push(
                           context,
                           new MaterialPageRoute(
                               builder: (context) => new SignUpPage()));
                     },
-                    child: Text("Signup", style: TextStyle(color: Colors.black),))),
+                    child: Text(
+                      "Signup",
+                      style: TextStyle(color: Colors.black),
+                    ))),
             ListTile(
                 title: ElevatedButton(
                     style: ButtonStyle(
                       backgroundColor: MaterialStateProperty.resolveWith<Color>(
-                            (Set<MaterialState> states) {
+                        (Set<MaterialState> states) {
                           return HexColor("c6c6c8");
                         },
                       ),
@@ -112,7 +116,10 @@ class _LaunchPageState extends State<LaunchPage> {
                                   presentationStyle: IOSUIModalPresentationStyle
                                       .OVER_FULL_SCREEN)));
                     },
-                    child: Text("Privacy Policy", style: TextStyle(color: Colors.black),))),
+                    child: Text(
+                      "Privacy Policy",
+                      style: TextStyle(color: Colors.black),
+                    ))),
           ],
         ),
       ),

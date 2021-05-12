@@ -3,13 +3,14 @@ import 'package:flutter/services.dart';
 import 'dart:io';
 import 'dart:async';
 import 'dart:convert';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:ecosort/pages/home.dart';
-import 'package:ecosort/pages/registerDevice.dart';
+import 'history.dart';
+import 'registerDevice.dart';
 
 String username = "";
 String password = "";
@@ -140,7 +141,7 @@ class _LogInPageState extends State<LogInPage> {
                           Navigator.of(context).pushAndRemoveUntil(
                               MaterialPageRoute(
                                   builder: (BuildContext context) =>
-                                      HomePage()),
+                                      HistoryPage()),
                               (Route<dynamic> route) => false);
                         } else {
                           Navigator.of(context).pushAndRemoveUntil(
@@ -191,7 +192,7 @@ class _LogInPageState extends State<LogInPage> {
                   prefs.setString('deviceID', resultJson["deviceid"]);
                   Navigator.of(context).pushAndRemoveUntil(
                       MaterialPageRoute(
-                          builder: (BuildContext context) => HomePage()),
+                          builder: (BuildContext context) => HistoryPage()),
                       (Route<dynamic> route) => false);
                 } else {
                   Navigator.of(context).pushAndRemoveUntil(
@@ -271,7 +272,7 @@ class _LogInPageState extends State<LogInPage> {
                     prefs.setString('deviceID', resultJson["deviceid"]);
                     Navigator.of(context).pushAndRemoveUntil(
                         MaterialPageRoute(
-                            builder: (BuildContext context) => HomePage()),
+                            builder: (BuildContext context) => HistoryPage()),
                         (Route<dynamic> route) => false);
                   } else {
                     Navigator.of(context).pushAndRemoveUntil(

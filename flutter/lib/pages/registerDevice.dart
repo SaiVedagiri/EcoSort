@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
 // ignore: import_of_legacy_library_into_null_safe
 import 'package:http/http.dart';
-import 'package:ecosort/pages/home.dart';
-import 'package:ecosort/pages/launch.dart';
-import 'package:ecosort/components/hex.dart';
-
+import 'launch.dart';
+import 'history.dart';
+import '../components/hex.dart';
 
 var prefs;
 
@@ -114,7 +114,7 @@ class _RegisterDevicePageState extends State<RegisterDevicePage> {
                       Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(
-                              builder: (BuildContext context) => HomePage()));
+                              builder: (BuildContext context) => HistoryPage()));
                     } on PlatformException catch (ex) {
                       if (ex.code == BarcodeScanner.cameraAccessDenied) {
                         setState(() {
