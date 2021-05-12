@@ -81,7 +81,7 @@ class TakePicturePageState extends State<TakePicturePage> {
                 }
               },
             )
-          : Center(child: CircularProgressIndicator());
+          : Center(child: CircularProgressIndicator()),
       bottomNavigationBar: BottomAppBar(
         child: new Row(
             mainAxisSize: MainAxisSize.max,
