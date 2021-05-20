@@ -229,7 +229,7 @@ express()
     labels.forEach((label) => {
       label = label.description;
       console.log(label);
-      if(label.toLowerCase().includes("glass") || label.toLowerCase().includes("plastic") || label.toLowerCase().includes("paper")){
+      if(label.toLowerCase().includes("glass") || label.toLowerCase().includes("plastic") || label.toLowerCase().includes("paper")|| label.toLowerCase().includes("bottle")|| label.toLowerCase().includes("metal")){
         returnVal.data = "true";
         if(mainLabel == "trash"){
           mainLabel = label.toLowerCase();
@@ -275,7 +275,7 @@ express()
         console.log("Predicted concepts, with confidence values:")
         for (const c of response.outputs[0].data.concepts) {
           console.log(c.name + ": " + c.value);
-          if(c.name.toLowerCase().includes("recycl") || c.name.toLowerCase().includes("plastic") || c.name.toLowerCase().includes("paper") || c.name.toLowerCase().includes("glass")){
+          if(c.name.toLowerCase().includes("recycl") || c.name.toLowerCase().includes("plastic") || c.name.toLowerCase().includes("paper") || c.name.toLowerCase().includes("glass") || c.name.toLowerCase().includes("bottle") || c.name.toLowerCase().includes("metal")){
             returnVal.data = "true";
             if(mainLabel == "trash"){
               mainLabel = c.name.toLowerCase();
