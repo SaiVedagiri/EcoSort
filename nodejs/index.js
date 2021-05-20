@@ -171,7 +171,7 @@ express()
     const returnVal = {
       userkey: userKey,
       imageurl: imageURL,
-      deviceid: myVal.deviceID
+      deviceid: myVal2.deviceID
     };
     res.send(returnVal);
   })
